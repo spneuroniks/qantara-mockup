@@ -9,7 +9,7 @@ Q.GROUPS = [
   ["Set up and run a company", ["01", "02", "03", "04", "05"]],
   ["Money and tax", ["06", "07"]],
   ["Owners and wealth", ["08", "09", "10"]],
-  ["Certifications and growth", ["11", "12", "13", "14", "15", "16"]],
+  ["Certifications and growth", ["11", "12", "13", "18", "14", "15", "16"]],
 ];
 Q.CATALOG = {
   "01": { go: "#/setup/new", get: "A licensed company: mainland, free zone or offshore.", by: "Qantara team", need: ["A passport copy for each owner", "Proof of home address for each owner", "What the business will do", "A name you would like"] },
@@ -24,7 +24,8 @@ Q.CATALOG = {
   "10": { go: "#/start/10", get: "A second passport or residency through a government programme.", by: "A licensed agent files; Qantara pre-screens and refers", fee: () => "Quoted after the pre-screen", need: ["Your passport", "The amount you plan to invest", "The countries you have lived in for 10 years"] },
   "11": { go: "#/start/11", co: true, get: "The yearly In-Country Value certificate for tenders.", by: "Qantara prepares; a certifying body issues", need: ["A licensed company", "Audited statements for the year", "Supplier spend and payroll figures"] },
   "12": { go: "#/start/12", co: true, get: "Your company made ready for an ISO certificate.", by: "Qantara prepares; an unrelated body certifies", need: ["A licensed company", "The standard you want", "Your current policies and records"] },
-  "13": { go: "#/start/13", co: true, get: "Supplier registration, ready to prequalify.", by: "Qantara team", need: ["A licensed company", "The supply categories you want", "A bank letter and tax certificate"] },
+  "13": { go: "#/start/13", co: true, get: "Registration as a supplier with ADNOC, Abu Dhabi Government, DEWA or TAQA, or a municipality classification.", by: "Qantara team; the buyer or municipality decides", need: ["A licensed company", "The buyer you want to supply", "The supply categories you want", "A bank letter and tax certificate"] },
+  "18": { go: "#/start/18", co: true, get: "The conformity certificate a regulated product needs before it is sold in the UAE.", by: "Qantara prepares; a testing body tests; the ministry issues", need: ["A licensed company", "The product and what you do with it", "The product's specification and label", "Any laboratory test reports you have"] },
   "14": { go: "#/start/14", co: true, get: "A registered UAE trademark for ten years.", by: "Qantara, or a registered agent for owners abroad", need: ["A licensed company", "The name or logo to protect", "How many classes of goods or services"] },
   "15": { go: "#/legal", get: "A licensed law firm for a contract, an agreement or a dispute.", by: "The law firm you choose. Qantara is not a law firm", fee: () => "Set by the law firm", time: "Set by the law firm", need: ["The kind of matter", "The names of the other parties, for the conflict check"] },
   "16": { go: "#/marketing", co: true, get: "Brand, website and social media, with every item approved by you.", by: "A partner agency; Qantara bills you", fee: () => "Sample: AED 6,000 a month", time: "First items within 2 weeks", need: ["A licensed company", "What you want marketing to do", "The channels you use"] },

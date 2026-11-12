@@ -1,4 +1,4 @@
-/* Services 8 to 14 on one pattern: a short intake with named checks and disclosures, then the shared case engine. */
+/* Services 8 to 14, and 18, on one pattern: a short intake with named checks and disclosures, then the shared case engine. */
 Q.PARTNERS.push(
   { id: "p-crest", name: "Crestline Fiduciary", type: "Licensed corporate service provider", licence: "CSP-1180", validDays: 260 },
   { id: "p-alreem", name: "Al Reem Legal", type: "Law firm", licence: "LF-2041", validDays: 320 },
@@ -8,6 +8,7 @@ Q.PARTNERS.push(
   { id: "p-certa", name: "Certa ICV Certifiers", type: "ICV certifying body", licence: "ICV-CB-12", validDays: 280 },
   { id: "p-isocert", name: "Summit Certification", type: "Certification body (unrelated)", licence: "CB-7781", validDays: 400 },
   { id: "p-mark", name: "Markwell Trademark Agents", type: "Registered trademark agent", licence: "TMA-0931", validDays: 330 },
+  { id: "p-northlab", name: "Northgate Testing", type: "Product testing body", licence: "TB-4410", validDays: 300 },
   { id: "p-pixel", name: "Pixel and Palm Agency", type: "Marketing agency", licence: "MA-6120", validDays: 200 });
 const MORE = Object.keys(Q.SVC);
 const mdraft = (svc) => { const d = Q.state.mdraft; if (d && d.svc === svc) return d; return (Q.state.mdraft = { svc, companyId: "", route: Q.SVC[svc].routes.length === 1 ? Q.SVC[svc].routes[0] : "", v: {}, step: 0, ack: false, err: "" }); };

@@ -1,5 +1,5 @@
 /* State lives in this browser only (localStorage). "Reset demo data" in the menu restores the seed. */
-Q.KEY = "qantara-mockup-v10";
+Q.KEY = "qantara-mockup-v11";
 Q.VAT = 5; // per cent, on Qantara's own fee only
 
 Q.day = (offset) => { const d = new Date(); d.setDate(d.getDate() + (offset || 0)); return d.toISOString().slice(0, 10); };

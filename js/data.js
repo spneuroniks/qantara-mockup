@@ -79,7 +79,7 @@ Q.ROUTES = {
 };
 Q.ROUTES["auh-mainland"].steps = Q.ROUTES["dxb-mainland"].steps;
 Object.values(Q.ROUTES).forEach((r) => { r.service = "01"; r.body = "authority"; });
-Q.SERVICES = { "01": "Business setup", "02": "Sector licensing", "03": "Bank account opening", "04": "Visas and residency", "05": "PRO and compliance", "06": "Accounting, VAT and corporate tax", "07": "Cross-border tax coordination", "08": "Private-client structuring", "09": "Digital-asset licensing", "10": "Citizenship and residency abroad", "11": "ICV certification", "12": "ISO certification", "13": "ADNOC supplier registration", "14": "Trademark registration", "15": "Legal services", "16": "Marketing and content" };
+Q.SERVICES = { "01": "Business setup", "02": "Sector licensing", "03": "Bank account opening", "04": "Visas and residency", "05": "PRO and compliance", "06": "Accounting, VAT and corporate tax", "07": "Cross-border tax coordination", "08": "Private-client structuring", "09": "Digital-asset licensing", "10": "Citizenship and residency abroad", "11": "ICV certification", "12": "ISO certification", "13": "Supplier registration", "14": "Trademark registration", "15": "Legal services", "16": "Marketing and content", "18": "Product conformity certificate" };
 /* Per-service pieces the shared case screens call: about card, completion note, document-step text. */
 Q.about = {}; Q.doneNote = {}; Q.packText = {}; Q.forms = {};
 
