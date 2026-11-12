@@ -44,7 +44,8 @@ Q.actions.emailLogin = () => {
   Q.actions.pickUser({ id: u.id });
 };
 Q.actions.verify = () => { Q.state.userId = Q.state.pendingUser; Q.state.pendingUser = null; Q.save(); Q.go(Q.homeOf(Q.user())); };
-Q.homeOf = (u) => ({ client: "#/home", staff: "#/staff/queue", partner: Q.onbStatus(Q.partner(u.partnerId)) === "approved" ? "#/partner/tasks" : "#/partner/onboarding" }[u.role]);
+/* Only a partner account has a firm to look up. Clients and staff must never reach that lookup. */
+Q.homeOf = (u) => (u.role === "client" ? "#/home" : u.role === "staff" ? "#/staff/queue" : u.role === "partner" ? (Q.onbStatus(Q.partner(u.partnerId)) === "approved" ? "#/partner/tasks" : "#/partner/onboarding") : "#/login");
 Q.actions.signOut = () => { Q.state.userId = null; Q.state.pendingUser = null; Q.save(); Q.go("#/login"); };
 Q.actions.menu = (d, el) => { const open = el.closest(".rail").classList.toggle("open"); el.setAttribute("aria-expanded", open); el.textContent = open ? "Close" : "Menu"; };
 Q.actions.reset = () => { if (confirm("Restore the demo data to its starting point?")) { Q.seed(); Q.go("#/login"); } };

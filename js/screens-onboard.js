@@ -26,7 +26,7 @@ const OB_TASKS = [
 ];
 const obTask = (k) => OB_TASKS.find((t) => t.key === k);
 const obOf = (pid) => Q.state.onb[pid] || null;
-Q.onbStatus = (p) => (obOf(p.id) ? obOf(p.id).status : "approved");
+Q.onbStatus = (p) => (!p ? "none" : obOf(p.id) ? obOf(p.id).status : "approved"); // no firm: never "approved"
 const OB_STATUS = { invited: ["Invited", "plain"], progress: ["In progress", ""], submitted: ["Under review", "dark"], changes: ["Changes requested", "warn"], approved: ["Approved", "ok"], declined: ["Declined", "bad"] };
 Q.onbTag = (p) => Q.tag(...OB_STATUS[Q.onbStatus(p)]);
 const obEditable = (o) => ["invited", "progress", "changes"].includes(o.status);
