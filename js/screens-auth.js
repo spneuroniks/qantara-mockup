@@ -11,6 +11,7 @@ const loginArt = `<div class="login-art">
 
 Q.screens.login = () => `<div class="login">${loginArt}
   <div class="login-form"><div class="login-box">
+    <a class="tour-in" href="#/tour"><b>New here? Take the guided tour</b><span>${Q.TOUR.length} screens, about five minutes</span></a>
     <div class="stack-s"><h1>Sign in</h1><p class="muted">Use your own login. Accounts are never shared.</p></div>
     <button class="btn wide" data-act="pickUser" data-id="u-layla">Sign in with UAE Pass</button>
     <div class="or">or</div>
@@ -36,7 +37,8 @@ Q.screens.code = () => {
   </div></div></div>`;
 };
 
-Q.actions.pickUser = (d) => { Q.state.pendingUser = d.id; Q.save(); Q.go("#/login/code"); };
+/* Signing in or out by hand ends a guided tour: the tour bar must never sit above an account the tour did not pick. */
+Q.actions.pickUser = (d) => { Q.state.tour = null; Q.state.pendingUser = d.id; Q.save(); Q.go("#/login/code"); };
 Q.actions.emailLogin = () => {
   const email = Q.val("login-email").toLowerCase();
   const u = Q.USERS.find((x) => x.email === email);
@@ -46,7 +48,7 @@ Q.actions.emailLogin = () => {
 Q.actions.verify = () => { Q.state.userId = Q.state.pendingUser; Q.state.pendingUser = null; Q.save(); Q.go(Q.homeOf(Q.user())); };
 /* Only a partner account has a firm to look up. Clients and staff must never reach that lookup. */
 Q.homeOf = (u) => (u.role === "client" ? "#/home" : u.role === "staff" ? "#/staff/queue" : u.role === "partner" ? (Q.onbStatus(Q.partner(u.partnerId)) === "approved" ? "#/partner/tasks" : "#/partner/onboarding") : "#/login");
-Q.actions.signOut = () => { Q.state.userId = null; Q.state.pendingUser = null; Q.save(); Q.go("#/login"); };
+Q.actions.signOut = () => { Q.state.tour = null; Q.state.userId = null; Q.state.pendingUser = null; Q.save(); Q.go("#/login"); };
 Q.actions.menu = (d, el) => { const open = el.closest(".rail").classList.toggle("open"); el.setAttribute("aria-expanded", open); el.textContent = open ? "Close" : "Menu"; };
 Q.actions.reset = () => { if (confirm("Restore the demo data to its starting point?")) { Q.seed(); Q.go("#/login"); } };
 Q.actions.sendMsg = (d) => { const text = Q.val("msg-text"); if (!text) return; Q.getCase(d.id).messages.push({ from: Q.user().name, t: Q.day(), text }); Q.save(); Q.render(); };

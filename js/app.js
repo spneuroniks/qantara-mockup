@@ -2,6 +2,8 @@
 Q.routes = [
   [/^#\/login$/, () => Q.screens.login(), "any"],
   [/^#\/login\/code$/, () => Q.screens.code(), "any"],
+  [/^#\/tour$/, () => Q.screens.tour(), "any"],
+  [/^#\/tour\/end$/, () => Q.screens.tourEnd(), "any"],
   [/^#\/home$/, () => Q.screens.home(), "client"],
   [/^#\/cases$/, () => Q.screens.cases(), "client"],
   [/^#\/services$/, () => Q.screens.services(), "client"],

@@ -41,20 +41,49 @@ Q.screens.services = () => Q.shell("services", `<h1>Services</h1><p class="muted
     return `<a class="card svc" href="#/services/${n}"><div class="card-h"><h3>${Q.esc(c.name)}</h3>${open.length ? Q.tag(open.length + " in progress", "") : locked ? Q.tag("Needs a company first", "plain") : ""}</div><p class="small">${Q.esc(c.get)}</p>
       <dl class="mini"><dt>Time</dt><dd>${Q.esc(c.time)}</dd><dt>Fee</dt><dd>${Q.esc(c.fee())}</dd></dl><span class="more">See what you need</span></a>`; }).join("")}</div></div>`).join("")}`);
 
+/* Who does what at one step: [what the client does, what Qantara and others do]. It follows the same step types the
+   cases run on (Q.holder, Q.stepAsk, Q.staffNext), so the page and the case cannot tell different stories.
+   A step type this does not know stops the page: a blank cell would read as "nothing to do". */
+Q.stepParts = (r, s) => {
+  const none = "Nothing";
+  const parts = {
+    quote: () => ["Accept the quote, sign the engagement letter and pay Qantara's fee", "Qantara prepares the quote"],
+    kyc: () => ["Upload the documents asked for", s.plain ? "Qantara checks each item" : "Qantara checks them and runs the " + (s.pack ? "readiness checks" : "sanctions screening") + "; the compliance officer approves"],
+    authority: () => [none, r.authority + " holds it. Qantara follows it and records the outcome"],
+    sign: () => [(s.report ? "Approve: " : "Sign: ") + Q.lc1(s.doc), "Qantara prepares it"],
+    upload: () => ["Upload: " + Q.lc1(s.doc), "Qantara checks it"],
+    pay: () => [s.proof ? "Pay the tax to the authority" : "Pay the government fees", "Qantara records the payment"],
+    task: () => [none, "Qantara does this and records it"],
+    partner: () => ["Agree to share your documents with the partner firm", "A partner firm (" + Q.lc1(s.partnerType) + ") does the work; Qantara hands it over and checks what comes back"],
+    apply: () => ["Apply in " + r.portal, "Qantara waits for you"],
+    appt: () => ["Attend the appointment", "Qantara books it and records the result"],
+    agent: () => [none, "The registered tax agent approves"],
+    form: () => [s.ask, "Qantara waits for your answer"],
+    second: () => [none, "A second person at Qantara checks the pack"],
+    conds: () => ["Meet the conditions that are yours", "Qantara closes the rest and confirms"],
+  }[s.type];
+  if (!parts) throw new Error('No "who does what" text for step type "' + s.type + '" (' + s.title + ")");
+  const [you, others] = parts();
+  if (!you || !others) throw new Error('Step "' + s.title + '" has an empty "who does what" cell');
+  return { you, others, yours: you !== none };
+};
+
 Q.screens.service = (n) => {
   if (!Q.CATALOG[n]) return notFound("services");
   const c = cat(n), open = openFor(n), locked = c.co && !licensed().length, draft = Q.drafts().find(([s]) => s === n);
   const routes = svcRoutes(n), steps = routes.length ? routes[0].steps : [];
+  const plan = steps.map((s) => Object.assign({ s }, Q.stepParts(routes[0], s))), yours = plan.filter((p) => p.yours).length;
   return Q.shell("services", `<div class="crumbs"><a href="#/services">Services</a> / ${Q.esc(c.name)}</div><h1>${Q.esc(c.name)}</h1><p class="lead">${Q.esc(c.get)}</p>
     <div class="main-side"><div class="stack">
       <div class="card"><h2>Before you start</h2><p class="small muted">Have these ready. Anything already on your file is not asked for again.</p><ul class="ticks">${c.need.map((x) => `<li>${Q.esc(x)}</li>`).join("")}</ul></div>
-      ${steps.length ? `<div class="card"><h2>How it goes</h2><p class="small muted">${routes.length > 1 ? "The usual steps. They change a little with the option you pick." : "Each step shows who holds it: you, Qantara, a partner or the authority."}</p>
-        <ol class="flow">${steps.map((s) => `<li><b>${Q.esc(s.title)}</b><span class="small muted">${Q.esc(/^Your choice/.test(s.est) ? Q.lc1(s.est) : "about " + s.est)}</span></li>`).join("")}</ol></div>` : ""}
+      ${steps.length ? `<div class="card"><h2>How it goes, and who does what</h2><p class="small muted">Your part is ${yours} of ${steps.length} steps. Qantara, a partner or the authority does the rest. ${routes.length > 1 ? "Shown for: " + Q.esc(routes[0].name) + ". The steps change a little with the option you pick." : ""}</p>
+        <ol class="plan">${plan.map((p) => `<li><div class="plan-h"><b>${Q.esc(p.s.title)}</b><span class="small muted">${Q.esc(/^\d/.test(p.s.est) ? "about " + p.s.est : p.s.est)}</span></div>
+          <dl><div><dt>You</dt><dd>${p.yours ? Q.esc(p.you) : `<span class="muted">${Q.esc(p.you)}</span>`}</dd></div><div><dt>Qantara and others</dt><dd>${Q.esc(p.others)}</dd></div></dl></li>`).join("")}</ol></div>` : ""}
       ${locked ? `<div class="note warn">This service is for a licensed mainland or free zone company, and you do not have one yet. Set up the company first; your details carry over.</div>` : ""}
       ${open.length ? `<div class="note">You already have ${open.length} open request(s) for this service: ${open.map((x) => `<a href="#/case/${x.id}">${x.id}</a>`).join(", ")}.</div>` : ""}
       <div class="row">${locked ? `<a class="btn" href="#/services/01">Set up a company first</a>` : `<a class="btn" href="${c.go}">${draft ? "Continue where you left off" : n === "05" || n === "06" || n === "07" ? "Open " + Q.esc(c.name.toLowerCase()) : "Start now"}</a>`}<a class="btn ghost" href="#/services">Back to all services</a></div>
     </div>
-    <div class="stack"><div class="card"><h3>At a glance</h3><dl class="facts"><dt>Time</dt><dd>${Q.esc(c.time)}. An estimate, not a promise.</dd><dt>Fee</dt><dd>${Q.esc(c.fee())}. Sample figure; official fees are passed on at cost.</dd><dt>Who does the work</dt><dd>${Q.esc(c.by)}</dd></dl></div>
+    <div class="stack"><div class="card"><h3>At a glance</h3><dl class="facts"><dt>Time</dt><dd>${Q.esc(c.time)}. An estimate, not a promise.</dd><dt>Fee</dt><dd>${Q.esc(c.fee())}. Sample figure; official fees are passed on at cost.</dd><dt>Who does the work</dt><dd>${Q.esc(c.by)}</dd>${steps.length ? `<dt>Your part</dt><dd>${yours} of ${steps.length} steps</dd>` : ""}</dl></div>
       ${Q.helpCard()}</div></div>`);
 };
 Q.helpCard = () => `<div class="card"><h3>Need help?</h3><p class="small muted">Your adviser answers in Messages, usually the same working day. Nothing is sent until you press the last button.</p><a class="btn ghost sm" href="#/messages" style="justify-self:start">Ask your adviser</a></div>`;

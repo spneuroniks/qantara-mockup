@@ -39,7 +39,7 @@ Q.shell = (active, body) => {
       <div class="rail-foot"><div class="who"><b>${Q.esc(u.name)}</b><span>${Q.esc(u.title)}</span></div>
         <button data-act="signOut">Sign out / switch user</button><button data-act="reset">Reset demo data</button></div>
     </aside>
-    <div class="content"><div class="demo">Mockup with made-up data. No figure, name, fee or duration on this screen is real.</div><main class="page">${body}</main></div>
+    <div class="content">${Q.tourBar()}<div class="demo">Mockup with made-up data. No figure, name, fee or duration on this screen is real.</div><main class="page">${body}</main></div>
   </div>`;
 };
 
